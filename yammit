@@ -1,0 +1,29 @@
+#!/bin/sh
+
+. ~/.yammit
+
+usage() {
+  echo "This is a placeholder for usage"
+}
+
+base_url=http://$YAMMIT_RECEIVER_HOST/YamahaExtendedControl/v1
+
+case "$1" in
+  on)
+    curl --verbose "$base_url/main/setPower?power=on"
+    ;;
+
+  features)
+    curl --verbose "$base_url/system/getFeatures"
+    ;;
+
+  toggle)
+    curl --verbose "$base_url/main/setPower?power=toggle"
+    ;;
+
+  *)
+    curl --verbose "$base_url/$1"
+    ;;
+esac
+
+# yammit setPower --power (on|standby|toggle) --zone (main|zone2|zone3|zone4)
