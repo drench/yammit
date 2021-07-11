@@ -19,6 +19,9 @@ yammit_call() {
 action=$1; shift
 
 case "$action" in
+  getFeatures)
+    yammit_call "system/getFeatures"
+    ;;
   getNetworkStatus)
     yammit_call "system/getNetworkStatus"
     ;;
@@ -29,6 +32,19 @@ case "$action" in
     else
       zone=$1; shift
       yammit_call "${zone}/getStatus"
+    fi
+    ;;
+  setInput)
+    [[ -z "$1" ]] && usage
+    if [ "$1" = "--completion" ]; then
+      printf "main\nzone2\nzone3\nzone4\n"
+    elif [ "$2" = "--completion" ]; then
+      $0 getFeatures | jq -r '.system | .input_list[] | .id'
+    else
+      zone=$1; shift
+      input=$1; shift
+      # TK optional "mode" param
+      yammit_call "${zone}/setInput?input=${input}"
     fi
     ;;
   setPower)
