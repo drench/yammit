@@ -5,7 +5,7 @@ die() {
   exit 111
 }
 
-source ~/.yammit
+source ~/.config/yammit/env
 
 usage() {
   die "This is a placeholder for usage"
