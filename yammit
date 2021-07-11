@@ -1,29 +1,49 @@
 #!/bin/sh
 
-. ~/.yammit
-
-usage() {
-  echo "This is a placeholder for usage"
+die() {
+  >&2 echo $*
+  exit 111
 }
 
-base_url=http://$YAMMIT_RECEIVER_HOST/YamahaExtendedControl/v1
+source ~/.yammit
 
-case "$1" in
-  on)
-    curl --verbose "$base_url/main/setPower?power=on"
+usage() {
+  die "This is a placeholder for usage"
+}
+
+yammit_call() {
+  base_url=http://$YAMMIT_RECEIVER_HOST/YamahaExtendedControl/v1
+  curl --silent "$base_url/$1" | jq .
+}
+
+action=$1; shift
+
+case "$action" in
+  getNetworkStatus)
+    yammit_call "system/getNetworkStatus"
     ;;
-
-  features)
-    curl --verbose "$base_url/system/getFeatures"
+  getStatus)
+    [[ -z "$1" ]] && usage
+    if [ "$1" = "--completion" ]; then
+      printf "main\nzone2\nzone3\nzone4\n"
+    else
+      zone=$1; shift
+      yammit_call "${zone}/getStatus"
+    fi
     ;;
-
-  toggle)
-    curl --verbose "$base_url/main/setPower?power=toggle"
+  setPower)
+    [[ -z "$1" ]] && usage
+    if [ "$1" = "--completion" ]; then
+      printf "main\nzone2\nzone3\nzone4\n"
+    elif [ "$2" = "--completion" ]; then
+      printf "on\nstandby\ntoggle\n"
+    else
+      zone=$1; shift
+      power=$1; shift
+      yammit_call "${zone}/setPower?power=${power}"
+    fi
     ;;
-
   *)
-    curl --verbose "$base_url/$1"
+    usage
     ;;
 esac
-
-# yammit setPower --power (on|standby|toggle) --zone (main|zone2|zone3|zone4)
