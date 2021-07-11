@@ -54,6 +54,14 @@ case "$action" in
       yammit_call "${zone}/setInput?input=${input}"
     fi
     ;;
+  setPlayback)
+    if [ "$1" = "--completion" ]; then
+      printf "play\nstop\npause\nplay_pause\nprevious\nnext\nfast_reverse_start\nfast_reverse_end\nfast_forward_start\nfast_forward_end\n"
+    else
+      playback=$1; shift
+      yammit_call "netusb/setPlayback?playback=${playback}"
+    fi
+    ;;
   setPower)
     [[ -z "$1" ]] && usage
     if [ "$1" = "--completion" ]; then
