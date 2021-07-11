@@ -16,6 +16,10 @@ yammit_call() {
   curl --silent "$base_url/$1" | jq .
 }
 
+yammit_zones() {
+  $0 getFeatures | jq -r '.zone[] | .id'
+}
+
 action=$1; shift
 
 case "$action" in
@@ -28,7 +32,7 @@ case "$action" in
   getStatus)
     [[ -z "$1" ]] && usage
     if [ "$1" = "--completion" ]; then
-      printf "main\nzone2\nzone3\nzone4\n"
+      yammit_zones
     else
       zone=$1; shift
       yammit_call "${zone}/getStatus"
@@ -37,7 +41,7 @@ case "$action" in
   setInput)
     [[ -z "$1" ]] && usage
     if [ "$1" = "--completion" ]; then
-      printf "main\nzone2\nzone3\nzone4\n"
+      yammit_zones
     elif [ "$2" = "--completion" ]; then
       $0 getFeatures | jq -r '.system | .input_list[] | .id'
     else
@@ -50,7 +54,7 @@ case "$action" in
   setPower)
     [[ -z "$1" ]] && usage
     if [ "$1" = "--completion" ]; then
-      printf "main\nzone2\nzone3\nzone4\n"
+      yammit_zones
     elif [ "$2" = "--completion" ]; then
       printf "on\nstandby\ntoggle\n"
     else
