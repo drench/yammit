@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+
+if [[ ! -o interactive ]]; then
+    return
+fi
+
+compctl -K _yammit yammit
+
+_yammit() {
+  local words
+  read -cA words
+
+  if [ "${#words}" -eq 2 ]; then
+    reply=(getFeatures getNetworkStatus getStatus setInput setPower)
+  elif [ "${#words}" -eq 3 ]; then
+    # words[1] == "yammit"
+    # words[2] == "setPower" (or whatever subcommand)
+    reply=($($words[1] $words[2] --completion))
+  elif [ "${#words}" -eq 4 ]; then
+    reply=($($words[1] $words[2] $words[3] --completion))
+  else
+    reply=()
+  fi
+}
