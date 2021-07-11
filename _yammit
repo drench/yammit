@@ -11,7 +11,7 @@ _yammit() {
   read -cA words
 
   if [ "${#words}" -eq 2 ]; then
-    reply=(getFeatures getNetworkStatus getStatus setInput setPower setVolume)
+    reply=(getFeatures getNetworkStatus getPlayInfo getStatus setInput setPower setVolume)
   elif [ "${#words}" -eq 3 ]; then
     # words[1] == "yammit"
     # words[2] == "setPower" (or whatever subcommand)

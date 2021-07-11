@@ -29,6 +29,9 @@ case "$action" in
   getNetworkStatus)
     yammit_call "system/getNetworkStatus"
     ;;
+  getPlayInfo)
+    yammit_call "netusb/getPlayInfo"
+    ;;
   getStatus)
     [[ -z "$1" ]] && usage
     if [ "$1" = "--completion" ]; then
