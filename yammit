@@ -24,16 +24,24 @@ action=$1; shift
 
 case "$action" in
   getFeatures)
-    yammit_call "system/getFeatures"
+    if [ "$1" != "--completion" ]; then
+      yammit_call "system/getFeatures"
+    fi
     ;;
   getNetworkStatus)
-    yammit_call "system/getNetworkStatus"
+    if [ "$1" != "--completion" ]; then
+      yammit_call "system/getNetworkStatus"
+    fi
     ;;
   getPlayInfo)
-    yammit_call "netusb/getPlayInfo"
+    if [ "$1" != "--completion" ]; then
+      yammit_call "netusb/getPlayInfo"
+    fi
     ;;
   getRecentInfo)
-    yammit_call "netusb/getRecentInfo"
+    if [ "$1" != "--completion" ]; then
+      yammit_call "netusb/getRecentInfo"
+    fi
     ;;
   getStatus)
     [[ -z "$1" ]] && usage
