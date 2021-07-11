@@ -32,6 +32,9 @@ case "$action" in
   getPlayInfo)
     yammit_call "netusb/getPlayInfo"
     ;;
+  getRecentInfo)
+    yammit_call "netusb/getRecentInfo"
+    ;;
   getStatus)
     [[ -z "$1" ]] && usage
     if [ "$1" = "--completion" ]; then
