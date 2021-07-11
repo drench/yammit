@@ -63,6 +63,18 @@ case "$action" in
       yammit_call "${zone}/setPower?power=${power}"
     fi
     ;;
+  setVolume)
+    [[ -z "$1" ]] && usage
+    if [ "$1" = "--completion" ]; then
+      yammit_zones
+    elif [ "$2" = "--completion" ]; then
+      printf "up\ndown\n" # TK also accept integers in range_step
+    else
+      zone=$1; shift
+      volume=$1; shift
+      yammit_call "${zone}/setVolume?volume=${volume}"
+    fi
+    ;;
   *)
     usage
     ;;
