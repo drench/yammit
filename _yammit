@@ -12,6 +12,7 @@ _yammit() {
 
   if [ "${#words}" -eq 2 ]; then
     reply=(
+      getDeviceInfo
       getFeatures
       getRecentInfo
       getNetworkStatus
