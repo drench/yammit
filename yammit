@@ -24,6 +24,13 @@ noArgumentGetFunctions=(
   getRecentInfo netusb
 )
 
+zoneCompletionFunctions=(
+  getStatus
+  setInput
+  setPower
+  setVolume
+)
+
 playbackStatuses=(
   fast_forward_end
   fast_forward_start
@@ -37,13 +44,19 @@ playbackStatuses=(
   stop
 )
 
+powerStatuses=(on standby toggle)
+
 yammit_call() {
   base_url=http://$YAMMIT_RECEIVER_HOST/YamahaExtendedControl/v1
   curl --silent "$base_url/$1" | jq .
 }
 
+getFeatures() {
+  yammit_call "system/getFeatures"
+}
+
 yammit_zones() {
-  $0 getFeatures | jq -r '.zone[] | .id'
+  getFeatures | jq -r '.zone[] | .id'
 }
 
 action=$1; shift
@@ -54,22 +67,23 @@ if [ -n "$noArgumentGetFunctions[(I)$action]" ]; then
   exit $?
 fi
 
+if [ $zoneCompletionFunctions[(I)$action] -gt 0 ]; then
+  if [ "$1" = "--completion" ]; then
+    yammit_zones
+    exit $?
+  elif [ -z "$1" ]; then
+    usage
+  fi
+fi
+
 case "$action" in
   getStatus)
-    [[ -z "$1" ]] && usage
-    if [ "$1" = "--completion" ]; then
-      yammit_zones
-    else
-      zone=$1; shift
-      yammit_call "${zone}/getStatus"
-    fi
+    zone=$1; shift
+    yammit_call "${zone}/getStatus"
     ;;
   setInput)
-    [[ -z "$1" ]] && usage
-    if [ "$1" = "--completion" ]; then
-      yammit_zones
-    elif [ "$2" = "--completion" ]; then
-      $0 getFeatures | jq -r '.system | .input_list[] | .id'
+    if [ "$2" = "--completion" ]; then
+      getFeatures | jq -r '.system | .input_list[] | .id'
     else
       zone=$1; shift
       input=$1; shift
@@ -86,11 +100,8 @@ case "$action" in
     fi
     ;;
   setPower)
-    [[ -z "$1" ]] && usage
-    if [ "$1" = "--completion" ]; then
-      yammit_zones
-    elif [ "$2" = "--completion" ]; then
-      printf "on\nstandby\ntoggle\n"
+    if [ "$2" = "--completion" ]; then
+      printf "%s\n" ${powerStatuses[@]}
     else
       zone=$1; shift
       power=$1; shift
@@ -98,10 +109,7 @@ case "$action" in
     fi
     ;;
   setVolume)
-    [[ -z "$1" ]] && usage
-    if [ "$1" = "--completion" ]; then
-      yammit_zones
-    elif [ "$2" = "--completion" ]; then
+    if [ "$2" = "--completion" ]; then
       printf "up\ndown\n" # TK also accept integers in range_step
     else
       zone=$1; shift
