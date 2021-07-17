@@ -28,6 +28,7 @@ zoneCompletionFunctions=(
   getSoundProgramList
   getStatus
   setInput
+  setMute
   setPower
   setSleep
   setVolume
@@ -95,6 +96,15 @@ case "$action" in
       input=$1; shift
       # TK optional "mode" param
       yammit_call "${zone}/setInput?input=${input}"
+    fi
+    ;;
+  setMute)
+    if [ "$2" = "--completion" ]; then
+      printf "false\ntrue\n"
+    else
+      zone=$1; shift
+      enable=$1; shift
+      yammit_call "${zone}/setMute?enable=${enable}"
     fi
     ;;
   setPlayback)

@@ -24,6 +24,7 @@ _yammit() {
       getSoundProgramList
       getStatus
       setInput
+      setMute
       setPlayback
       setPower
       setSleep
