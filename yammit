@@ -29,6 +29,7 @@ zoneCompletionFunctions=(
   getStatus
   setInput
   setPower
+  setSleep
   setVolume
 )
 
@@ -111,6 +112,15 @@ case "$action" in
       zone=$1; shift
       power=$1; shift
       yammit_call "${zone}/setPower?power=${power}"
+    fi
+    ;;
+  setSleep)
+    if [ "$2" = "--completion" ]; then
+      printf "0\n30\n60\n90\n120\n"
+    else
+      zone=$1; shift
+      sleep=$1; shift
+      yammit_call "${zone}/setSleep?sleep=${sleep}"
     fi
     ;;
   setVolume)
