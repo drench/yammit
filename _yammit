@@ -16,6 +16,7 @@ _yammit() {
       getBluetoothInfo
       getDeviceInfo
       getFeatures
+      getFuncStatus
       getMacAddressFilter
       getNetworkStatus
       getPlayInfo
