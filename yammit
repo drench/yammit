@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env zsh
 
 die() {
   >&2 echo $*
@@ -11,6 +11,19 @@ usage() {
   die "This is a placeholder for usage"
 }
 
+typeset -A noArgumentGetFunctions
+noArgumentGetFunctions=(
+  getBluetoothDeviceList system
+  getBluetoothInfo system
+  getDeviceInfo system
+  getFeatures system
+  getFuncStatus system
+  getMacAddressFilter system
+  getNetworkStatus system
+  getPlayInfo netusb
+  getRecentInfo netusb
+)
+
 yammit_call() {
   base_url=http://$YAMMIT_RECEIVER_HOST/YamahaExtendedControl/v1
   curl --silent "$base_url/$1" | jq .
@@ -22,52 +35,13 @@ yammit_zones() {
 
 action=$1; shift
 
+if [ -n "$noArgumentGetFunctions[(I)$action]" ]; then
+  root=$noArgumentGetFunctions[$action]
+  yammit_call "$root/$action"
+  exit $?
+fi
+
 case "$action" in
-  getBluetoothDeviceList)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "system/getBluetoothDeviceList"
-    fi
-    ;;
-  getBluetoothInfo)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "system/getBluetoothInfo"
-    fi
-    ;;
-  getDeviceInfo)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "system/getDeviceInfo"
-    fi
-    ;;
-  getFeatures)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "system/getFeatures"
-    fi
-    ;;
-  getFuncStatus)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "system/getFuncStatus"
-    fi
-    ;;
-  getMacAddressFilter)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "system/getMacAddressFilter"
-    fi
-    ;;
-  getNetworkStatus)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "system/getNetworkStatus"
-    fi
-    ;;
-  getPlayInfo)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "netusb/getPlayInfo"
-    fi
-    ;;
-  getRecentInfo)
-    if [ "$1" != "--completion" ]; then
-      yammit_call "netusb/getRecentInfo"
-    fi
-    ;;
   getStatus)
     [[ -z "$1" ]] && usage
     if [ "$1" = "--completion" ]; then
