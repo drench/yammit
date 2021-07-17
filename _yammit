@@ -21,6 +21,7 @@ _yammit() {
       getNetworkStatus
       getPlayInfo
       getRecentInfo
+      getSoundProgramList
       getStatus
       setInput
       setPlayback

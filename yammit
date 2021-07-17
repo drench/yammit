@@ -25,6 +25,7 @@ noArgumentGetFunctions=(
 )
 
 zoneCompletionFunctions=(
+  getSoundProgramList
   getStatus
   setInput
   setPower
@@ -77,6 +78,10 @@ if [ $zoneCompletionFunctions[(I)$action] -gt 0 ]; then
 fi
 
 case "$action" in
+  getSoundProgramList)
+    zone=$1; shift
+    yammit_call "${zone}/getSoundProgramList"
+    ;;
   getStatus)
     zone=$1; shift
     yammit_call "${zone}/getStatus"
