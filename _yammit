@@ -12,13 +12,14 @@ _yammit() {
 
   if [ "${#words}" -eq 2 ]; then
     reply=(
+      getBluetoothDeviceList
       getBluetoothInfo
       getDeviceInfo
       getFeatures
       getMacAddressFilter
-      getRecentInfo
       getNetworkStatus
       getPlayInfo
+      getRecentInfo
       getStatus
       setInput
       setPlayback

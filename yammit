@@ -23,6 +23,11 @@ yammit_zones() {
 action=$1; shift
 
 case "$action" in
+  getBluetoothDeviceList)
+    if [ "$1" != "--completion" ]; then
+      yammit_call "system/getBluetoothDeviceList"
+    fi
+    ;;
   getBluetoothInfo)
     if [ "$1" != "--completion" ]; then
       yammit_call "system/getBluetoothInfo"
