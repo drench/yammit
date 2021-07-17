@@ -24,6 +24,19 @@ noArgumentGetFunctions=(
   getRecentInfo netusb
 )
 
+playbackStatuses=(
+  fast_forward_end
+  fast_forward_start
+  fast_reverse_end
+  fast_reverse_start
+  next
+  pause
+  play
+  play_pause
+  previous
+  stop
+)
+
 yammit_call() {
   base_url=http://$YAMMIT_RECEIVER_HOST/YamahaExtendedControl/v1
   curl --silent "$base_url/$1" | jq .
@@ -66,7 +79,7 @@ case "$action" in
     ;;
   setPlayback)
     if [ "$1" = "--completion" ]; then
-      printf "play\nstop\npause\nplay_pause\nprevious\nnext\nfast_reverse_start\nfast_reverse_end\nfast_forward_start\nfast_forward_end\n"
+      printf "%s\n" ${playbackStatuses[@]}
     else
       playback=$1; shift
       yammit_call "netusb/setPlayback?playback=${playback}"
