@@ -33,6 +33,11 @@ case "$action" in
       yammit_call "system/getFeatures"
     fi
     ;;
+  getMacAddressFilter)
+    if [ "$1" != "--completion" ]; then
+      yammit_call "system/getMacAddressFilter"
+    fi
+    ;;
   getNetworkStatus)
     if [ "$1" != "--completion" ]; then
       yammit_call "system/getNetworkStatus"
