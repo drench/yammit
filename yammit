@@ -140,6 +140,14 @@ case "$action" in
   --completion)
     printf "%s\n" ${(k)noArgumentGetFunctions} $zoneCompletionFunctions setPlayback
     ;;
+  --completion-code)
+    cmd=$(basename "$full_cmd")
+    echo "compctl -K _${cmd} ${cmd}"
+    echo "_${cmd}() {"
+    echo '  local words; read -cA words; shift -p words'
+    echo '  reply=($($words --completion))'
+    echo '}'
+    ;;
   *)
     usage ;;
 esac
