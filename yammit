@@ -76,64 +76,59 @@ fi
 
 case "$action" in
   getSoundProgramList)
-    zone=$1; shift
+    zone=$1; [[ -z "$2" ]] || exit 0
     yammit_call "${zone}/getSoundProgramList"
     ;;
   getStatus)
-    zone=$1; shift
+    zone=$1; [[ -z "$2" ]] || exit 0
     yammit_call "${zone}/getStatus"
     ;;
   setInput)
-    if [ "$2" = "--completion" ]; then
+    zone=$1; input=$2; [[ -z "$3" ]] || exit 0
+    if [ "$input" = "--completion" ]; then
       getFeatures | jq -r '.system | .input_list[] | .id'
     else
-      zone=$1; shift
-      input=$1; shift
-      # TK optional "mode" param
+      # TK accept optional "mode" param
       yammit_call "${zone}/setInput?input=${input}"
     fi
     ;;
   setMute)
-    if [ "$2" = "--completion" ]; then
-      printf "false\ntrue\n"
+    zone=$1; enable=$2; [[ -z "$3" ]] || exit 0
+    if [ "$enable" = "--completion" ]; then
+      printf "%s\n" false true
     else
-      zone=$1; shift
-      enable=$1; shift
       yammit_call "${zone}/setMute?enable=${enable}"
     fi
     ;;
   setPlayback)
-    if [ "$1" = "--completion" ]; then
+    playback=$1; [[ -z "$2" ]] || exit 0
+    if [ "$playback" = "--completion" ]; then
       printf "%s\n" ${playbackStatuses[@]}
     else
-      playback=$1; shift
       yammit_call "netusb/setPlayback?playback=${playback}"
     fi
     ;;
   setPower)
-    if [ "$2" = "--completion" ]; then
+    zone=$1; power=$2; [[ -z "$3" ]] || exit 0
+    if [ "$power" = "--completion" ]; then
       printf "%s\n" ${powerStatuses[@]}
     else
-      zone=$1; shift
-      power=$1; shift
       yammit_call "${zone}/setPower?power=${power}"
     fi
     ;;
   setSleep)
-    if [ "$2" = "--completion" ]; then
-      printf "0\n30\n60\n90\n120\n"
+    zone=$1; sleep=$2; [[ -z "$3" ]] || exit 0
+    if [ "$sleep" = "--completion" ]; then
+      printf "%d\n" 0 30 60 90 120
     else
-      zone=$1; shift
-      sleep=$1; shift
       yammit_call "${zone}/setSleep?sleep=${sleep}"
     fi
     ;;
   setVolume)
+    zone=$1; volume=$2; [[ -z "$3" ]] || exit 0
     if [ "$2" = "--completion" ]; then
-      printf "up\ndown\n" # TK also accept integers in range_step
+      printf "%s\n" up down # TK also accept integers in range_step
     else
-      zone=$1; shift
-      volume=$1; shift
       yammit_call "${zone}/setVolume?volume=${volume}"
     fi
     ;;
