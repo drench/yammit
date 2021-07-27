@@ -8,35 +8,8 @@ compctl -K _yammit yammit
 
 _yammit() {
   local words
-  read -cA words
+  read -cA words # read the entire command line as an array of words called "words"
 
-  if [ "${#words}" -eq 2 ]; then
-    reply=(
-      getBluetoothDeviceList
-      getBluetoothInfo
-      getDeviceInfo
-      getFeatures
-      getFuncStatus
-      getMacAddressFilter
-      getNetworkStatus
-      getPlayInfo
-      getRecentInfo
-      getSoundProgramList
-      getStatus
-      setInput
-      setMute
-      setPlayback
-      setPower
-      setSleep
-      setVolume
-    )
-  elif [ "${#words}" -eq 3 ]; then
-    # words[1] == "yammit"
-    # words[2] == "setPower" (or whatever subcommand)
-    reply=($($words[1] $words[2] --completion))
-  elif [ "${#words}" -eq 4 ]; then
-    reply=($($words[1] $words[2] $words[3] --completion))
-  else
-    reply=()
-  fi
+  shift -p words # discard the last piece (either blank or a partial string)
+  reply=($($words --completion))
 }

@@ -1,15 +1,11 @@
 #!/usr/bin/env zsh
 
-die() {
-  >&2 echo $*
-  exit 111
-}
+full_cmd=$0
 
-source ~/.config/yammit/env
+die() { >&2 echo $*; exit 111 }
 
-usage() {
-  die "This is a placeholder for usage"
-}
+[[ -r ~/.config/yammit/env ]] && source ~/.config/yammit/env
+[[ -z "$YAMMIT_RECEIVER_HOST" ]] && die "Please set YAMMIT_RECEIVER_HOST"
 
 typeset -A noArgumentGetFunctions
 noArgumentGetFunctions=(
@@ -54,13 +50,12 @@ yammit_call() {
   curl --silent "$base_url/$1" | jq .
 }
 
-getFeatures() {
-  yammit_call "system/getFeatures"
-}
+getFeatures() { yammit_call "system/getFeatures" }
+yammit_zones() { getFeatures | jq -r '.zone[] | .id' }
 
-yammit_zones() {
-  getFeatures | jq -r '.zone[] | .id'
-}
+subcommands=(${(k)noArgumentGetFunctions} $zoneCompletionFunctions setPlayback)
+
+usage() { die "usage: $full_cmd [$subcommands]" }
 
 action=$1; shift
 
@@ -142,7 +137,9 @@ case "$action" in
       yammit_call "${zone}/setVolume?volume=${volume}"
     fi
     ;;
-  *)
-    usage
+  --completion)
+    printf "%s\n" ${(k)noArgumentGetFunctions} $zoneCompletionFunctions setPlayback
     ;;
+  *)
+    usage ;;
 esac
