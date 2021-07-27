@@ -1,8 +1,10 @@
 # Yammit
 
 A command line interface to Yamaha A/V products (receivers, home theater systems)
+written in `zsh`.
 
-Set the hostname of your device in `~/.config/yammit/env` like so:
+Set the hostname of your device in the `YAMMIT_RECEIVER_HOST` environment variable,
+or add a file called `~/.config/yammit/env` and set it there, like this:
 
 ```sh
 YAMMIT_RECEIVER_HOST=RX-V581-DC2176.local
@@ -13,7 +15,7 @@ Finding the device's hostname is an exercise for the user.
 Once you have checked out this repository, add `zsh` tab completion:
 
 ```sh
-source _yammit
+eval "$(./yammit --completion-code)"
 ```
 
 `yammit` is written in `zsh` and relies on `curl` and `jq`.
