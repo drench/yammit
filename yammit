@@ -27,6 +27,7 @@ zoneCompletionFunctions=(
   setMute
   setPower
   setSleep
+  setSoundProgram
   setVolume
 )
 
@@ -51,6 +52,7 @@ yammit_call() {
 }
 
 getFeatures() { yammit_call "system/getFeatures" }
+getSoundProgramList() { yammit_call "$1/getSoundProgramList" }
 yammit_zones() { getFeatures | jq -r '.zone[] | .id' }
 
 subcommands=(${(k)noArgumentGetFunctions} $zoneCompletionFunctions setPlayback)
@@ -78,7 +80,7 @@ fi
 case "$action" in
   getSoundProgramList)
     zone=$1; [[ -z "$2" ]] || exit 0
-    yammit_call "${zone}/getSoundProgramList"
+    getSoundProgramList "$zone"
     ;;
   getStatus)
     zone=$1; [[ -z "$2" ]] || exit 0
@@ -123,6 +125,14 @@ case "$action" in
       printf "%d\n" 0 30 60 90 120
     else
       yammit_call "${zone}/setSleep?sleep=${sleep}"
+    fi
+    ;;
+  setSoundProgram)
+    zone=$1; program=$2; [[ -z "$3" ]] || exit 0
+    if [ "$program" = "--completion" ]; then
+      getSoundProgramList "$zone" | jq -r '.sound_program_list | sort[]'
+    else
+      yammit_call "${zone}/setSoundProgram?program=${program}"
     fi
     ;;
   setVolume)
