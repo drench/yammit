@@ -60,6 +60,7 @@ usage() { die "usage: $full_cmd [$subcommands]" }
 action=$1; shift
 
 if [ -n "$noArgumentGetFunctions[(I)$action]" ]; then
+  [[ -z "$1" ]] || exit 0
   root=$noArgumentGetFunctions[$action]
   yammit_call "$root/$action"
   exit $?
