@@ -29,6 +29,7 @@ zoneCompletionFunctions=(
   setPower
   setSleep
   setSoundProgram
+  setSurroundDecoderType
   setVolume
 )
 
@@ -138,6 +139,16 @@ case "$action" in
       getSoundProgramList "$zone" | jq -r '.sound_program_list | sort[]'
     else
       yammit_call "${zone}/setSoundProgram?program=${program}"
+    fi
+    ;;
+  setSurroundDecoderType)
+    zone=$1; type=$2; [[ -z "$3" ]] || exit 0
+    if [ "$type" = "--completion" ]; then
+      echo "auto"
+      getFeatures | jq --arg zone "$zone" -r \
+        '.zone[] | select(.id == $zone).surr_decoder_type_list | sort[]'
+    else
+      yammit_call "${zone}/setSurroundDecoderType?type=${type}"
     fi
     ;;
   setVolume)
